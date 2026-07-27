@@ -33,14 +33,13 @@ public sealed class AphrodesiacBiteSystem : EntitySystem
 
     public void OnBite(Entity<AphrodesiacBiteComponent> ent, ref AphrodesiacBiteEvent args)
     {
-        Log.Info("starting doafter");
         if (args.Handled)
             return;
 
         _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, ent, 0.75F, new ABDoafterEvent(), ent, target: args.Target));
         args.Handled = true;
     }
-    
+
     private void TryFinishDoafter(Entity<AphrodesiacBiteComponent> ent, ref ABDoafterEvent args)
     {
         if (args.Args.Target is not { } target)
@@ -48,15 +47,12 @@ public sealed class AphrodesiacBiteSystem : EntitySystem
         if (args.Cancelled || args.Handled)
             return;
         args.Handled = true;
-        
-        Log.Info("attempting bite");
+
         args.Handled |= TryInject(ent.Comp, target, args.User);
     }
 
     public bool TryInject(AphrodesiacBiteComponent bite, EntityUid target, EntityUid user)
     {
-        
-        Log.Info("starting inject");
         if (!TryComp<BloodstreamComponent>(target, out _))
             return false;
 
